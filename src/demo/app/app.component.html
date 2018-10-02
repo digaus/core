@@ -1,5 +1,5 @@
 <mat-tab-group>
-
+  <div [globalKeyboard]="locale" [darkTheme]="darkTheme" [disabled]="false"></div>
   <mat-tab>
     <ng-template mat-tab-label>
       <mat-icon>keyboard</mat-icon>
@@ -213,7 +213,7 @@
 
     </form>
   </mat-tab>
-  <mat-tab [globalKeyboard]="locale" [darkTheme]="darkTheme">
+  <mat-tab>
     <ng-template mat-tab-label>
       <mat-icon>language</mat-icon>
       Global keyboard
