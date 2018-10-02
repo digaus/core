@@ -1,4 +1,4 @@
-import { Component, ElementRef, Inject, LOCALE_ID, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Inject, LOCALE_ID, OnDestroy, OnInit, ViewChild, HostListener } from '@angular/core';
 import { FormControl, NgControl, NgForm, NgModel } from '@angular/forms';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 
@@ -16,9 +16,37 @@ import { MatInput } from '@angular/material';
 })
 export class AppComponent implements OnInit, OnDestroy {
 
+
+  @HostListener('document:focusin', ['$event'])
+  private _showKeyboard() {
+    if (event.srcElement instanceof HTMLInputElement || event.srcElement instanceof HTMLTextAreaElement) {
+      const input = event.srcElement;
+      const elementRef = new ElementRef(input);
+      const readonly = input.getAttribute('readonly') !== null && input.getAttribute('readonly') !== 'true';
+      if (!readonly) {
+        this._globaLKeyboardRef = this._keyboardService.open('de', {
+          darkTheme: this.darkTheme,
+          duration: this.duration,
+          isDebug: this.isDebug
+        });
+        this._globaLKeyboardRef.instance.setInputInstance(elementRef);
+        this._globaLKeyboardRef.instance.enterClick.subscribe(() => this.dispatchEnter(input));
+        this._globaLKeyboardRef.instance.genericClick.subscribe(() => this.dispatchInput(input));
+      }
+    }
+  }
+  @HostListener('document:focusout', ['$event'])
+  private _hideKeyboard() {
+    if (event.srcElement instanceof HTMLInputElement || event.srcElement instanceof HTMLTextAreaElement && this._globaLKeyboardRef) {
+      this._globaLKeyboardRef.dismiss();
+    }
+  }
+  private _globaLKeyboardRef: MatKeyboardRef<MatKeyboardComponent>;
+
   private _enterSubscription: Subscription;
 
   private _keyboardRef: MatKeyboardRef<MatKeyboardComponent>;
+
 
   private _submittedForms = new BehaviorSubject<{ control: string, value: string }[][]>([]);
 
@@ -76,6 +104,40 @@ export class AppComponent implements OnInit, OnDestroy {
     this.closeCurrentKeyboard();
   }
 
+  log(): void {
+    console.log('enter')
+  }
+  dispatchEnter(inputElement: HTMLInputElement | HTMLTextAreaElement): void {
+    let ev = document.createEvent('Events');
+    ev.initEvent('keydown', true, true);
+    ev['keyCode'] = 13;
+    ev['which'] = 13;
+    ev['charCode'] = 13;
+    ev['key'] = 'Enter';
+    ev['code'] = 'Enter';
+    inputElement.dispatchEvent(ev);
+    ev = document.createEvent('Events');
+    ev.initEvent('keypress', true, true);
+    ev['keyCode'] = 13;
+    ev['which'] = 13;
+    ev['charCode'] = 13;
+    ev['key'] = 'Enter';
+    ev['code'] = 'Enter';
+    inputElement.dispatchEvent(ev);
+    ev = document.createEvent('Events');
+    ev.initEvent('keyup', true, true);
+    ev['keyCode'] = 13;
+    ev['which'] = 13;
+    ev['charCode'] = 13;
+    ev['key'] = 'Enter';
+    ev['code'] = 'Enter';
+    inputElement.dispatchEvent(ev);
+  }
+  dispatchInput(inputElement: HTMLInputElement | HTMLTextAreaElement): void {
+    setTimeout(() => {
+      inputElement.dispatchEvent(new Event('input',{ bubbles: true }))
+    });
+  }
   submitForm(form?: NgForm) {
     const submittedForms = this._submittedForms.getValue();
     const submittedForm = Object
