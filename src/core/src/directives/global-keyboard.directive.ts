@@ -19,6 +19,8 @@ export class GlobalKeyboardDirective implements OnDestroy {
 
   @Input() isDebug: boolean;
 
+  @Input() disable: boolean;
+
   @Output() enterClick: EventEmitter<void> = new EventEmitter<void>();
 
   @Output() capsClick: EventEmitter<void> = new EventEmitter<void>();
@@ -37,7 +39,7 @@ export class GlobalKeyboardDirective implements OnDestroy {
 
   @HostListener('window:focusin', ['$event'])
     private _showKeyboard() {
-        if (event.srcElement instanceof HTMLInputElement || event.srcElement instanceof HTMLTextAreaElement) {
+        if (event.srcElement instanceof HTMLInputElement || event.srcElement instanceof HTMLTextAreaElement && !this.disable) {
             const input = event.srcElement;
             const elementRef = new ElementRef(input);
             const readonly = input.getAttribute('readonly') !== null && input.getAttribute('readonly') !== 'true';
