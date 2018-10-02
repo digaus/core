@@ -213,7 +213,7 @@
 
     </form>
   </mat-tab>
-  <mat-tab>
+  <mat-tab [globalKeyboard]="locale" [darkTheme]="darkTheme">
     <ng-template mat-tab-label>
       <mat-icon>language</mat-icon>
       Global keyboard
@@ -269,7 +269,6 @@
               #testModelReference="ngModel"
               name="azerbaijani"
               placeholder="Azərbaycanca"
-              (keyup.enter)="log()"
           >
           <mat-hint><code>ngModel</code> access by template binding</mat-hint>
         </mat-input-container>

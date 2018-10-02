@@ -19,6 +19,8 @@ import { MatKeyboardContainerComponent } from './components/keyboard-container/k
 import { MatKeyboardKeyComponent } from './components/keyboard-key/keyboard-key.component';
 import { MatKeyboardComponent } from './components/keyboard/keyboard.component';
 import { MatKeyboardDirective } from './directives/keyboard.directive';
+import { GlobalKeyboardDirective } from './directives/global-keyboard.directive';
+
 // Providers
 import { MatKeyboardKebabCasePipe } from './pipes/kebab-case.pipe';
 import { MatKeyboardService } from './services/keyboard.service';
@@ -42,14 +44,16 @@ import { MatKeyboardService } from './services/keyboard.service';
     MatKeyboardComponent,
     MatKeyboardContainerComponent,
     MatKeyboardKeyComponent,
-    MatKeyboardDirective
+    MatKeyboardDirective,
+    GlobalKeyboardDirective
   ],
   declarations: [
     MatKeyboardKebabCasePipe,
     MatKeyboardComponent,
     MatKeyboardContainerComponent,
     MatKeyboardKeyComponent,
-    MatKeyboardDirective
+    MatKeyboardDirective,
+    GlobalKeyboardDirective
   ],
   entryComponents: [
     MatKeyboardComponent,
