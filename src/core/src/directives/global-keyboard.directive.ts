@@ -75,7 +75,7 @@ export class GlobalKeyboardDirective implements OnDestroy {
                 const elementRef = new ElementRef(event.srcElement);
                 elementRef.nativeElement.type = 'number';
             }
-           // this._keyboardRef.dismiss();
+            this._keyboardRef.dismiss();
         }
     }
 
