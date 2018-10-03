@@ -58,6 +58,9 @@ export class MatKeyboardComponent implements OnInit {
 
   shiftClick: EventEmitter<void> = new EventEmitter<void>();
 
+  genericClick: EventEmitter<void> = new EventEmitter<void>();
+
+
   // returns an observable of the input instance
   get inputInstance(): Observable<ElementRef | null> {
     return this._inputInstance$.asObservable();
@@ -180,6 +183,14 @@ export class MatKeyboardComponent implements OnInit {
       this.onShiftClick();
     }
   }
+  /**
+   * bubbles event if submit is potentially triggered
+   */
+  onGenericClick() {
+    // notify subscribers
+    this.genericClick.next();
+  }
+
 
   /**
    * bubbles event if submit is potentially triggered

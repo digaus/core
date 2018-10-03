@@ -20,6 +20,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   private _keyboardRef: MatKeyboardRef<MatKeyboardComponent>;
 
+
   private _submittedForms = new BehaviorSubject<{ control: string, value: string }[][]>([]);
 
   @ViewChild('attachTo', { read: ElementRef })
@@ -75,7 +76,7 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.closeCurrentKeyboard();
   }
-
+  
   submitForm(form?: NgForm) {
     const submittedForms = this._submittedForms.getValue();
     const submittedForm = Object

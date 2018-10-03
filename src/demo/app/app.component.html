@@ -1,5 +1,5 @@
 <mat-tab-group>
-
+  <div [globalKeyboard]="locale" [darkTheme]="darkTheme" [disabled]="false"></div>
   <mat-tab>
     <ng-template mat-tab-label>
       <mat-icon>keyboard</mat-icon>
@@ -213,5 +213,68 @@
 
     </form>
   </mat-tab>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon>language</mat-icon>
+      Global keyboard
+    </ng-template>
+    
+    <section class="row">
+      <div class="col">
+        <mat-input-container>
+          <input
+              matInput
+              name="sushi"
+              [(ngModel)]="testModelValue"
+          >
+          <mat-hint>Using <code>ngModel</code> two way binding</mat-hint>
+        </mat-input-container>
 
+        <pre>{{ testModelValue }}</pre>
+      </div>
+
+      <div class="col">
+        <mat-input-container>
+          <input
+              type="number"
+              matInput
+              name="safe"
+              [value]="123"
+          >
+          <mat-hint>Simple <code>Element.value</code> binding</mat-hint>
+        </mat-input-container>
+
+        <pre>{{ testSimpleValue.value }}</pre>
+      </div>
+
+      <div class="col">
+        <mat-input-container>
+          <input
+              matInput
+              placeholder="Something with cheese"
+              name="emmentaler"
+              [formControl]="testControlValue"
+          >
+          <mat-hint>Reactive binding with <code>formControl</code></mat-hint>
+        </mat-input-container>
+
+        <pre>{{ testControlValue.value }}</pre>
+      </div>
+
+      <div class="col">
+        <mat-input-container>
+          <input
+              matInput
+              ngModel
+              #testModelReference="ngModel"
+              name="azerbaijani"
+              placeholder="Azərbaycanca"
+          >
+          <mat-hint><code>ngModel</code> access by template binding</mat-hint>
+        </mat-input-container>
+
+        <pre>{{ testModelReference.value }}</pre>
+      </div>
+    </section>
+  </mat-tab>
 </mat-tab-group>
