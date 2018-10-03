@@ -29,7 +29,7 @@ export class MatKeyboardKeyComponent implements OnInit {
   active$: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
   pressed$: BehaviorSubject<boolean> = new BehaviorSubject(false);
-
+  
   @Input()
   key: string | KeyboardClassKey;
 
@@ -151,6 +151,7 @@ export class MatKeyboardKeyComponent implements OnInit {
 
     // read the icons
     this._iconKeys = Object.keys(this._icons);
+
   }
 
   onClick(event: MouseEvent) {
@@ -163,19 +164,17 @@ export class MatKeyboardKeyComponent implements OnInit {
 
     // Manipulate the focused input / textarea value
     let value = this.inputValue === null || this.inputValue === undefined ? '' : this.inputValue.toString();
-
+    this.input.nativeElement.value = value;
     // Get startposition of selection
     const caretStart = this.input ? this._getCursorPosition().start : 0;
 
     // Get startposition of selection
     const caretEnd = this.input ? this._getCursorPosition().end : 0;
-
     // Delete selection
     if (caretEnd !== caretStart) {
       value = [value.slice(0, caretStart), value.slice(caretEnd)].join('');
       this._setCursorPosition(caretStart);
     }
-
 
     let char: string;
     switch (this.key) {
@@ -201,6 +200,7 @@ export class MatKeyboardKeyComponent implements OnInit {
           char = VALUE_NEWLINE;
         } else {
           this.enterClick.emit(event);
+          this._dispatchEnter();
           // TODO: trigger submit / onSubmit / ngSubmit properly (for the time being this has to be handled by the user himself)
           // console.log(this.control.ngControl.control.root)
           // this.input.nativeElement.form.submit();
@@ -230,6 +230,7 @@ export class MatKeyboardKeyComponent implements OnInit {
 
     if (char && this.input) {
       // Insert char at correct position
+
       this.inputValue = [value.slice(0, caretStart), char, value.slice(caretStart)].join('');
       this._setCursorPosition(caretStart + 1);
     }
@@ -250,6 +251,35 @@ export class MatKeyboardKeyComponent implements OnInit {
     } else {
       this.inputValue = value;
       this._setCursorPosition(caretStart);
+    }
+  }
+
+  private _dispatchEnter(): void {
+    if (this.input && this.input.nativeElement) {
+      let ev = document.createEvent('Events');
+      ev.initEvent('keydown', true, true);
+      ev['keyCode'] = 13;
+      ev['which'] = 13;
+      ev['charCode'] = 13;
+      ev['key'] = 'Enter';
+      ev['code'] = 'Enter';
+      this.input.nativeElement.dispatchEvent(ev);
+      ev = document.createEvent('Events');
+      ev.initEvent('keypress', true, true);
+      ev['keyCode'] = 13;
+      ev['which'] = 13;
+      ev['charCode'] = 13;
+      ev['key'] = 'Enter';
+      ev['code'] = 'Enter';
+      this.input.nativeElement.dispatchEvent(ev);
+      ev = document.createEvent('Events');
+      ev.initEvent('keyup', true, true);
+      ev['keyCode'] = 13;
+      ev['which'] = 13;
+      ev['charCode'] = 13;
+      ev['key'] = 'Enter';
+      ev['code'] = 'Enter';
+      this.input.nativeElement.dispatchEvent(ev);
     }
   }
 
@@ -279,20 +309,22 @@ export class MatKeyboardKeyComponent implements OnInit {
     if (!this.input) {
       return;
     }
-
+   
+    let start = 0;
+    let end = 0;
     if ('selectionEnd' in this.input.nativeElement && 'selectionStart' in this.input.nativeElement) {
       // Standard-compliant browsers
-      return {
-          start: this.input.nativeElement.selectionStart,
-          end: this.input.nativeElement.selectionEnd
-      };
+      console.log(this.input.nativeElement.type)
+      console.log(this.input.nativeElement.value)
+
+      start = this.input.nativeElement.selectionStart;
+      end = this.input.nativeElement.selectionEnd;
     } else if (window.document['selection']) {
       // IE
       this.input.nativeElement.focus();
       const el = this.input.nativeElement;
       const range = window.document['selection'].createRange();
-      let start = 0;
-      let end = 0;
+     
       if (range && range.parentElement() === el) {
           const len = el.value.length;
           const normalizedValue = el.value.replace(/\r\n/g, '\n');
@@ -321,12 +353,11 @@ export class MatKeyboardKeyComponent implements OnInit {
               }
           }
       }
-
-      return {
-          start: start,
-          end: end
-      };
     }
+    return {
+        start: start,
+        end: end
+    };
   }
   // inspired by:
   // ref https://stackoverflow.com/a/12518737/1146207
